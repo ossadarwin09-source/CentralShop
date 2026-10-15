@@ -1,0 +1,96 @@
+erDiagram
+    ROLES ||--o{ USUARIOS : "tiene"
+    USUARIOS ||--o| TIENDAS : "administra (vendedor)"
+    USUARIOS ||--o{ DIRECCIONES : "registra"
+    USUARIOS ||--o| CARRITOS : "posee"
+    USUARIOS ||--o{ PEDIDOS : "realiza (cliente)"
+    USUARIOS ||--o{ RESENAS : "escribe"
+    USUARIOS ||--o{ FAVORITOS : "guarda"
+    USUARIOS ||--o{ NOTIFICACIONES : "recibe"
+    CATEGORIAS ||--o{ CATEGORIAS : "subcategoria"
+    CATEGORIAS ||--o{ PRODUCTOS : "clasifica"
+    TIENDAS ||--o{ PRODUCTOS : "publica"
+    PRODUCTOS ||--o{ PRODUCTO_IMAGENES : "tiene"
+    PRODUCTOS ||--o{ CARRITO_ITEMS : "se agrega"
+    PRODUCTOS ||--o{ PEDIDO_ITEMS : "se compra"
+    PRODUCTOS ||--o{ RESENAS : "recibe"
+    PRODUCTOS ||--o{ FAVORITOS : "marcado"
+    CARRITOS ||--o{ CARRITO_ITEMS : "contiene"
+    PEDIDOS ||--o{ PEDIDO_ITEMS : "detalla"
+    PEDIDOS ||--|| PAGOS : "se paga con"
+    PEDIDOS ||--o| ENVIOS : "se entrega por"
+    DIRECCIONES ||--o{ PEDIDOS : "destino"
+    TIENDAS ||--o{ PEDIDO_ITEMS : "vende"
+
+    ROLES { int id PK
+        varchar nombre }
+    USUARIOS { int id PK
+        int rol_id FK
+        varchar nombre
+        varchar email
+        varchar password_hash
+        varchar telefono
+        enum estado }
+    TIENDAS { int id PK
+        int usuario_id FK
+        varchar nombre
+        text descripcion
+        varchar logo_url
+        enum estado }
+    CATEGORIAS { int id PK
+        int padre_id FK
+        varchar nombre }
+    PRODUCTOS { int id PK
+        int tienda_id FK
+        int categoria_id FK
+        varchar nombre
+        text descripcion
+        decimal precio
+        int stock
+        enum estado }
+    PRODUCTO_IMAGENES { int id PK
+        int producto_id FK
+        varchar url }
+    DIRECCIONES { int id PK
+        int usuario_id FK
+        varchar ciudad
+        varchar direccion }
+    CARRITOS { int id PK
+        int usuario_id FK }
+    CARRITO_ITEMS { int id PK
+        int carrito_id FK
+        int producto_id FK
+        int cantidad }
+    PEDIDOS { int id PK
+        int cliente_id FK
+        int direccion_id FK
+        decimal total
+        enum estado
+        datetime creado_en }
+    PEDIDO_ITEMS { int id PK
+        int pedido_id FK
+        int producto_id FK
+        int tienda_id FK
+        int cantidad
+        decimal precio_unitario }
+    PAGOS { int id PK
+        int pedido_id FK
+        enum metodo
+        enum estado
+        decimal monto }
+    ENVIOS { int id PK
+        int pedido_id FK
+        varchar transportadora
+        varchar guia
+        enum estado }
+    RESENAS { int id PK
+        int usuario_id FK
+        int producto_id FK
+        tinyint calificacion
+        text comentario }
+    FAVORITOS { int usuario_id PK
+        int producto_id PK }
+    NOTIFICACIONES { int id PK
+        int usuario_id FK
+        varchar mensaje
+        boolean leida }
